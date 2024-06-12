@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "497765192663",
+    "project_id": "parking-reservations-efcdc",
+    "storage_bucket": "parking-reservations-efcdc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497765192663:android:1ac3aa245ed4fff004b192",
+        "android_client_info": {
+          "package_name": "com.example.m_parking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAlrCVgGWuHLWcBBCL1874oGlZUMEobt8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
