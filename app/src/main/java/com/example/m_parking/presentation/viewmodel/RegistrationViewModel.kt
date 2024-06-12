@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.m_parking.data.model.User
+import com.example.m_parking.data.repository.AuthTokenStoreRepository
 import com.example.m_parking.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class RegistrationViewModel @Inject constructor(private val repository: UserRepository) :
+class RegistrationViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val tokenRepository: AuthTokenStoreRepository
+) :
     ViewModel() {
     val firstname: MutableState<String> = mutableStateOf("")
     val lastName: MutableState<String> = mutableStateOf("")
@@ -24,25 +28,28 @@ class RegistrationViewModel @Inject constructor(private val repository: UserRepo
     val message: MutableState<String> = mutableStateOf("")
     val regSuccess = MutableLiveData<Boolean>()
 
-
-    // TODO implement registration logic
-    fun register() {
+    suspend fun register() {
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    repository.register(
+                    userRepository.register(
                         User(
-                            firstname.value,
-                            lastName.value,
-                            email.value,
-                            phoneNumber.value,
-                            password.value
+                            firstName = firstname.value,
+                            lastName = lastName.value,
+                            email = email.value,
+                            phone = phoneNumber.value,
+                            password = password.value
                         )
+
                     )
                 }
                 if (response.isSuccessful) {
+                    response.body()?.token?.let {
+                        tokenRepository.saveTokenState(it)
+                    }
                     regSuccess.value = true
                     message.value = "success"
+
                 } else {
                     regSuccess.value = false
                     message.value = "error"
@@ -53,6 +60,4 @@ class RegistrationViewModel @Inject constructor(private val repository: UserRepo
             }
         }
     }
-
-
 }

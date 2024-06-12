@@ -131,25 +131,6 @@ class UserViewModel @Inject constructor(
         }
     }
 
-
-    suspend fun registerUser(user: User) {
-        viewModelScope.launch {
-            try {
-                val response = userRepository.register(user)
-                if (response.isSuccessful) {
-                    _userLoginResult.value = true
-                    response.body()?.token?.let {
-                        tokenRepository.saveTokenState(it)
-                    }
-                } else {
-                    _userLoginResult.value = false
-                }
-            } catch (e: Exception) {
-                _userLoginResult.value = false
-            }
-        }
-    }
-
     fun getUser(): User {
         viewModelScope.launch {
             try {
